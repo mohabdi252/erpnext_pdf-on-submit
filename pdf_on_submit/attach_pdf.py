@@ -161,7 +161,7 @@ def save_and_attach(content, to_doctype, to_name, folder, auto_name=None):
 	file.file_name = file_name
 	file.content = content
 	file.folder = folder
-	file.is_private = 1
+	file.is_private = 0
 	file.attached_to_doctype = to_doctype
 	file.attached_to_name = to_name
 	file.save()
