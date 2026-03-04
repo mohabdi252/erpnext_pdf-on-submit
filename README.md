@@ -25,9 +25,18 @@ To change the settings of this app, you can open **PDF on Submit Settings** via 
 
 In the _Enabled For_ table, add a row for each DocType you want to enable PDF generation for.
 
-If you don't choose a different configuration, PDFs will be generated with the default **Print Format** and **Letter Head**. The PDF is named like the document name.
+If you don't choose a different configuration, PDFs will be generated with the default **Print Format** and **Letter Head**. By default, the PDF is named like the document name.
 
 Alternatively, you can choose a different **Print Format** and **Letter Head** for each DocType. You can also define a custom format for the PDF file name.
+
+If your transaction DocType has an attachment field, you can choose to attach the generated PDF to that field. Please note that the field needs to have the following properties:
+
+- Fieldtype: Attach
+- Read Only: Yes
+    This is to prevent users from adding an attachment that will be overwritten on submit.
+- No Copy: Yes
+    This is to prevent the attachment from being copied to other documents.
+- Is Virtual: No
 
 ![PDF on Submit Settings](docs/settings.gif)
 
@@ -48,6 +57,32 @@ The PDF will be created in the language that is specified in the _Language_ fiel
 ## Add translations
 
 To add translations for a new language, please copy `pdf_on_submit/locale/main.pot` to `pdf_on_submit/locale/<language_code>.po` and fill in the translations (`msgstr`) for each `msgid`. When you're done, you can commit your changes and send a PR.
+
+## Helpers
+
+### `split_quill`
+
+This helper function is used to split the HTML content of a Quill editor into a list of HTML strings, each representing a direct child of the editor div. This is useful for breaking text-editor content into separate table rows in a print format.
+
+```jinja
+<table>
+    {% for paragraph in split_quill(row.description) %}
+        <tr>
+            <td>{{ paragraph }}</td>
+        </tr>
+    {% endfor %}
+</table>
+```
+
+### `get_serial_numbers`
+
+This helper function is used to get the serial numbers for a transaction row. The row is expected to have either a `serial_no` or a `serial_and_batch_bundle` field.
+
+```jinja
+{% for serial_number in get_serial_numbers(row) %}
+    {{ serial_number }}
+{% endfor %}
+```
 
 ## Licence
 
